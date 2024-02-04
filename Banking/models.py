@@ -9,6 +9,7 @@ class User(models.Model):
     cvv = models.IntegerField()
     balance = models.IntegerField()
     password = models.CharField(max_length=50)
+    post = models.CharField(max_length=10)
     
     def __str__(self):
         return f"{self.name} {self.rfid}"
