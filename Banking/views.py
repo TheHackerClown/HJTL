@@ -15,16 +15,17 @@ def dash(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             passwd = form.cleaned_data['password']
-            userdata = User.objects.get(accountno=username,password=passwd)
-            if userdata:
-                print(userdata.accountno)
+            try:
+                userdata = User.objects.get(accountno=username,password=passwd)
                 history_send = Transactions.objects.filter(send=userdata)
                 history_rec = Transactions.objects.filter(rec=userdata)
-                if history_rec or history_send:
-                    return render(request, 'dashboard.html',{'user':userdata,'history_send':history_send,'history_rec':history_rec})
-                else:
-                    index(request)
-            else:
-                index(request)
+                return render(request, 'dashboard.html',{'adminlist':['President','CIO','CEO','MD'],'post':userdata.post,'user':userdata,'history_send':history_send,'history_rec':history_rec})
+            except:
+                return render(request,'error.html',{'code':404,'desc':'No User Found'})
+        else:
+            error(request,"Bad Request",400)
     else:
-        index(request)
+        error(request,"Internal Server Error",500)
+
+def error(request, desc, code):
+    return render(request,'error.html',{'code':code,'desc':desc})
