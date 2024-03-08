@@ -13,7 +13,6 @@
             .parallax {
                 /* The image used */
                 background-image: url("{%static 'img.webp'%}");
-
                 /* Create the parallax scrolling effect */
                 background-attachment: fixed;
                 background-repeat: no-repeat;
@@ -35,6 +34,25 @@
                 background-color: aqua;
             }
         </style>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var sentBtn = document.getElementById("sent-btn");
+                var receivedBtn = document.getElementById("received-btn");
+                var sentTransactions = document.getElementById("sent-transactions");
+                var receivedTransactions = document.getElementById("received-transactions");
+
+                sentBtn.addEventListener("click", function() {
+                    sentTransactions.style.display = "block";
+                    receivedTransactions.style.display = "none";
+                });
+
+                receivedBtn.addEventListener("click", function() {
+                    sentTransactions.style.display = "none";
+                    receivedTransactions.style.display = "block";
+                });
+            });
+
+        </script>
     
     </head>
 
@@ -45,52 +63,86 @@
             <img src="{% static 'user.png'%}" style="height:80px;width:80px;transform: translate(10px,10px);">
             <p class='display-6' style="color: orangered;-webkit-text-stroke: 1px black;transform: translate(100px,-60px);">{{user.name}}</p>
             <p class="badge" style='height:min-content;transform: translate(102px,-80px);'id="{{user.type}}">{{user.type}} Account</p>
-        </header>
-        <body class="d-md-flex" style="overflow-wrap: normal;">
             <form class="row" method="post" action="{% url 'index' %}">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger" style="max-width: 80%;transform: translateX(10%);">Return To Login</button>
+                <button type="submit" class="btn btn-outline-danger" style="max-width: 80%;transform: translateX(12%);">Return To Login</button>
             </form>
+        </header>
+        <body class="d-md-flex" style="overflow-wrap: normal;">
+            
             <hr>
             <h1 style="-webkit-text-stroke: 1px black;color: white;text-align: center;">User Summary</h1>
             <div style="width: 98%;transform: translateX(1%); height:100px; border-radius: 10px;background-color: rgb(17, 17, 17);">
                 <h3 class="p-2" style="color: white;text-align: center;">Total Balance</h3>
-                <h1 style="color: white;text-align: center;">₹ {{user.balance}}</h1>
+                <h1 style="color: rgb(0, 216, 0);text-align: center;">₹ {{user.balance}}</h1>
             </div>
             <br>
             <div style="width: 98%;transform: translateX(1%); height:100px; border-radius: 10px;background-color: rgb(17, 17, 17);">
                 <h3 class="p-2" style="color: white;text-align: center;">Recieve Money</h3>
-                <h1 style="color: white;text-align: center;">Share This: @{{user.tag}}</h1>    
+                <h1 style="color: white;text-align: center;">Share This: <bold style="color: red;">@{{user.tag}}</bold></h1>    
             </div>
             <br>
-            <div style="width: 98%;transform: translateX(1%); border-radius: 10px;background-color: rgb(17, 17, 17);">
-                <h3 class="p-2" style="color: white;text-align: center;">Send Money</h3>
-                <form method="post" action="{% url 'index'%}">
+            <div style="display:flex;justify-content:center;width: 98%;transform: translateX(1%); border-radius: 10px;background-color: rgb(17, 17, 17);">
+                
+                <form method="post" action="{% url 'pay' %}">
                     {% csrf_token %}
-
-                    <h3 class='p-2' style="color: white;">Tag</h3>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">@</span>
+                    <h3 class="p-2" style="color: white;text-align: center;">Send Money</h3>
+                    <h3 class='p-2' style="color: white;text-align: center;">Tag</h3>
+                    <div class="input-group mb-3 p-2">
+                        <span class="input-group-text" id="tag">@</span>
                         {{field.tag}}
                     </div>
                     <br>
-                    <h3 class='p-2' style="color: white;">CVV</h3>
-                    {{ field.cvv }}
+                    <h3 class='p-2' style="color: white;text-align: center;">CVV</h3>
+                    <div class="input-group mb-3 p-2">
+                        {{field.cvv}}
+                    </div>
                     <br>
-                    <br>
-                    <h3 class='p-2' style="color: white;">Amount</h3>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="basic-addon1">₹</span>
+                    <h3 class='p-2' style="color: white;text-align: center;">Amount</h3>
+                    <div class="input-group mb-3 p-2">
+                        <span class="input-group-text" id="amt">₹</span>
                         {{field.amt}}
                     </div>
                     <br>
-                    <button type="submit" class="btn btn-outline-success justify-content-center">Pay</button>
+                    <button type="submit" class="btn btn-outline-success" style="transform: translate(125px,-20px);">Pay</button>
                 </form>
             </div>
             <br>
-            <div style="width: 98%;transform: translateX(1%); height:100px; border-radius: 10px;background-color: rgb(17, 17, 17);">
-                <h3 class="p-2" style="color: white;text-align: center;">Total Balance</h3>
-                <h1 style="color: white;text-align: center;">₹ {{user.balance}}</h1>
+            <div style="justify-content:center;width: 98%;transform: translateX(1%);height:300px; border-radius: 10px;background-color: rgb(17, 17, 17);overflow:hidden;">
+                <h3 style="color: white;text-align: center;padding-top: 5%;">Transactions</h3>
+                <div class="btn-group" role="group" style="transform: translateX(70%);">
+                    <button type="button" class="btn btn-primary" id="sent-btn">Sent</button>
+                    <button type="button" class="btn btn-primary" id="received-btn">Recieved</button>
+                </div>
+                <br>
+                <hr>
+                <div style="overflow:auto;height:300px">
+                    <div id="sent-transactions" style="display: block; overflow-x:scroll;">
+                        <!-- Content for Sent Transactions -->
+                        <!-- This could be dynamically loaded or statically defined -->
+                        {%for history in history_send %}
+                            <div class="d-flex justify-content-around">
+                            <p style="color: white;"><small>{{history.rec}}</small></p>
+                            <p class='display-5' style="color:red;">- {{history.balance}}</p> 
+                            <p style="color: white;"><small>{{history.date.date}}</small></p>
+                            </div>
+                            <hr>
+                        {% endfor %}
+                    </div>
+                
+                    <div id="received-transactions" style="display: none;">
+                        <!-- Content for Received Transactions -->
+                        <!-- This could be dynamically loaded or statically defined -->
+                        {%for history in history_rec %}
+                            <div class="d-flex justify-content-around">
+                            <p style="color: white;"><small>{{history.send}}</small></p>
+                            <p class='display-5' style="color:rgb(8, 219, 8);">+ {{history.balance}}</p> 
+                            <p style="color: white;"><small>{{history.date.date}}</small></p>
+                            </div>
+                            <hr>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
             <br>
             <br>

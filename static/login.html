@@ -56,11 +56,14 @@
                     <br>
                     <hr>
                 </div>
-                <h3 style="color: white;">Username</h3>
-                {{ field.username }}
-                <br>
-                <h3 style="color: white;">Password</h3>
-                {{ field.password }}
+                <div class="form-floating mb-3">
+                   {{field.username}}
+                    <label for="floatingInput">Username</label>
+                  </div>
+                  <div class="form-floating">
+                    {{field.password}}
+                    <label for="floatingPassword">Password</label>
+                  </div>
                 <br>
                 <button type="submit" class="btn btn-outline-success">Login</button>
             </form>
