@@ -1,3 +1,4 @@
 django
-pysqlite3
-pysqlite3-binary
+dj-database-url
+psycopg2-binary
+psycopg2
