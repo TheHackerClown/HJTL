@@ -5,5 +5,7 @@
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 .venv
+venv/
+venv
 
 # End of https://www.toptal.com/developers/gitignore/api/venv
