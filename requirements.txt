@@ -2,4 +2,4 @@ django
 dj-database-url
 psycopg2-binary
 psycopg2
-gunicorn
+gunicorn==19.7.1
