@@ -46,12 +46,18 @@ def pay(request):
             if sender:
                 reciever = User.objects.get(tag=rec)
                 if reciever:
-                    sender.balance -= amt
-                    reciever.balance += amt
-                    reciever.save()
-                    sender.save()
-                    Transactions.objects.create(send=sender,rec=reciever,balance=amt)
-                    return render(request,'redirect.html')
+                    if int(cvv)== sender.cvv:
+                        if sender.balance >= amt:
+                            sender.balance -= amt
+                            reciever.balance += amt
+                            reciever.save()
+                            sender.save()
+                            Transactions.objects.create(send=sender,rec=reciever,balance=amt)
+                            return render(request,'redirect.html')
+                        else:
+                            return render(request,'error.html',{'code':404,'desc':'Site Kharab hogyi'})
+                    else:
+                        return render(request,'error.html',{'code':404,'desc':'Site Kharab hogyi'})
                 else:
                     return render(request,'error.html',{'code':404,'desc':'Site Kharab hogyi'})
             else:
