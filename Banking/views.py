@@ -1,14 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .forms import Field,Login
 from .models import User, Transactions
 
 # Create your views here.
 
 def index(request):
-    user_agent = request.META.get('HTTP_USER_AGENT', '')
-    if 'Windows' in user_agent or 'Mac' in user_agent:
-        return render(request,'pc.html')
-    else:
+    #user_agent = request.META.get('HTTP_USER_AGENT', '')
+    #if 'Windows' in user_agent or 'Mac' in user_agent:
+    #    return render(request,'pc.html')
+    if True:
         form = Login()
         return render(request, 'login.html', {'field':form})
 
@@ -21,7 +21,7 @@ def dash(request):
             field = Field()
             userdata = User.objects.get(accountno=username,password=passwd)
             if userdata:
-
+                request.session['user_tag'] = userdata.tag
                 history_send = list(reversed(Transactions.objects.filter(send=userdata))) if Transactions.objects.filter(send=userdata) else None
                 history_rec = list(reversed(Transactions.objects.filter(rec=userdata))) if Transactions.objects.filter(rec=userdata) else None 
                 return render(request, 'dashboard.html',{'user':userdata,'history_send':history_send,'history_rec':history_rec,"field":field,'tag':userdata.tag})
@@ -42,7 +42,7 @@ def pay(request):
             rec = form.cleaned_data['tag']
             cvv = form.cleaned_data['cvv']
             amt = form.cleaned_data['amt']
-            sender = User.objects.get(cvv=cvv)
+            sender = User.objects.get(tag=request.session['user_tag'])
             if sender:
                 reciever = User.objects.get(tag=rec)
                 if reciever:
@@ -58,3 +58,7 @@ def pay(request):
                 return render(request,'error.html',{'code':404,'desc':'Site Kharab hogyi'})
         else:
             return render(request,'error.html',{'code':404,'desc':'Site Kharab hogyi'})
+        
+def exit(request):
+    del request.session['user_tag']
+    return redirect('index')
