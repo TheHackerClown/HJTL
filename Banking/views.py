@@ -45,7 +45,7 @@ def pay(request):
             sender = User.objects.get(tag=request.session['user_tag'])
             if sender:
                 reciever = User.objects.get(tag=rec)
-                if reciever:
+                if reciever !=sender:
                     if int(cvv)== sender.cvv:
                         if sender.balance >= amt:
                             sender.balance -= amt
