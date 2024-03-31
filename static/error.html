@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+use<!DOCTYPE html>
 <html lang="en">
 {%load static%}
   <head>
@@ -14,10 +14,7 @@
     <div class="col align-items-center justify-content-center vh-100 bg-dark">
         <h1 class="row display-1 fw-bold text-align-center text-white">{{code}}</h1>
         <h3 class="row display-1 fw-bold text-white">{{desc}}</h3>
-        <form class="row" method="post" action="{% url 'index' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-danger" style="max-width: 200px;">Return To Login</button>
-        </form>
+        <a href='/exit' class="btn btn-outline-danger" style="max-width: 200px;">Return To Login</a>
     </div>
   </body>
 
